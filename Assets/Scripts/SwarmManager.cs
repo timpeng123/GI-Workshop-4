@@ -50,6 +50,15 @@ public class SwarmManager : MonoBehaviour
     private void GenerateSwarm()
     {
         // Write code here...
+        for (int i = 0; i < enemyCols; i++)
+        {
+            for (int j = 0; j < enemyRows; j++)
+            {
+                var enemy = Instantiate(enemyTemplate, transform);
+                // initialize enemies in x-z plane
+                enemy.transform.localPosition = new Vector3(i * enemySpacing, 0f, j * enemySpacing);
+            }
+        }
     }
 
     // Step the swarm across the screen, based on the current direction, or down
@@ -61,5 +70,30 @@ public class SwarmManager : MonoBehaviour
         // Tip: You probably want a private variable to keep track of the
         // direction the swarm is moving. You could alternate this between 1 and
         // -1 to serve as a vector multiplier when stepping the swarm.
+
+        var swarmWidth = (this.enemyCols - 1) * this.enemySpacing;
+        var swarmMinX = transform.localPosition.x;
+        var swarmMaxX = swarmMinX + swarmWidth;
+
+        // if object reaches either left or right boundary, move downwards and reverse direction
+        // else, move sideways
+        // use swarmMinX and swarmMaxX to determine boundaries
+        // below code moves swarm up and down in z-axis, please debug and fix it
+
+        if (swarmMinX >= this.leftBoundaryX || swarmMaxX <= this.rightBoundaryX)
+        {
+            // Move downwards in the y-axis.
+            transform.localPosition += new Vector3(0f, 0f, -this.stepSize);
+
+            // Reverse the direction of movement.
+            this.stepSize *= -1;
+
+            
+        }
+        else
+        {
+            // Move sideways according to the direction and step size.
+            transform.localPosition += new Vector3(this.stepSize, 0f, 0f);
+        }
     }
 }
